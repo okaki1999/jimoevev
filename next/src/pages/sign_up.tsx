@@ -5,20 +5,21 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import { useUserState, useSnackbarState } from '@/hooks/useGlobalState'
+import { useSnackbarState } from '@/hooks/useGlobalState'
+import { styles } from '@/styles'
 
-type SignInFormData = {
+type SignUpFormData = {
   email: string
   password: string
+  name: string
 }
 
-const SignIn: NextPage = () => {
+const SignUp: NextPage = () => {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [user, setUser] = useUserState()
   const [, setSnackbar] = useSnackbarState()
+  const [isLoading, setIsLoading] = useState(false)
 
-  const { handleSubmit, control } = useForm<SignInFormData>({
+  const { handleSubmit, control } = useForm<SignUpFormData>({
     defaultValues: { email: '', password: '' },
   })
 
@@ -34,45 +35,57 @@ const SignIn: NextPage = () => {
     password: {
       required: 'パスワードを入力してください。',
     },
+    name: {
+      required: 'ユーザー名を入力してください。',
+    },
   }
 
-  const onSubmit: SubmitHandler<SignInFormData> = (data) => {
-    setIsLoading(true)
-    const url = process.env.NEXT_PUBLIC_API_BASE_URL + '/auth/sign_in'
-    const headers = { 'Content-Type': 'application/json' }
+  const onSubmit: SubmitHandler<SignUpFormData> = (data) => {
+    const SignUp = async (data: SignUpFormData) => {
+      setIsLoading(true)
+      const url = process.env.NEXT_PUBLIC_API_BASE_URL + '/auth'
+      const headers = { 'Content-Type': 'application/json' }
+      const confirmSuccessUrl =
+        process.env.NEXT_PUBLIC_FRONT_BASE_URL + '/sign_in'
 
-    axios({ method: 'POST', url: url, data: data, headers: headers })
-      .then((res: AxiosResponse) => {
-        localStorage.setItem('access-token', res.headers['access-token'])
-        localStorage.setItem('client', res.headers['client'])
-        localStorage.setItem('uid', res.headers['uid'])
-        setUser({
-          ...user,
-          isFetched: false,
-        })
-        setSnackbar({
-          message: 'サインインに成功しました',
-          severity: 'success',
-          pathname: '/',
-        })
-        router.push('/')
+      await axios({
+        method: 'POST',
+        url: url,
+        data: { ...data, confirm_success_url: confirmSuccessUrl },
+        headers: headers,
       })
-      .catch((e: AxiosError<{ error: string }>) => {
-        console.log(e.message)
-        setSnackbar({
-          message: '登録ユーザーが見つかりません',
-          severity: 'error',
-          pathname: '/sign_in',
+        .then((res: AxiosResponse) => {
+          localStorage.setItem(
+            'access-token',
+            res.headers['access-token'] || '',
+          )
+          localStorage.setItem('client', res.headers['client'] || '')
+          localStorage.setItem('uid', res.headers['uid'] || '')
+          setSnackbar({
+            message: '認証メールをご確認ください',
+            severity: 'success',
+            pathname: '/',
+          })
+          router.push('/')
         })
-        setIsLoading(false)
-      })
+        .catch((e: AxiosError<{ error: string }>) => {
+          console.log(e.message)
+          setSnackbar({
+            message: '不正なユーザー情報です',
+            severity: 'error',
+            pathname: '/sign_up',
+          })
+          setIsLoading(false)
+        })
+    }
+    SignUp(data)
   }
 
   return (
     <Box
+      css={styles.pageMinHeight}
       sx={{
         backgroundColor: '#EDF2F7',
-        minHeight: 'calc(100vh - 57px)',
       }}
     >
       <Container maxWidth="sm">
@@ -81,10 +94,15 @@ const SignIn: NextPage = () => {
             component="h2"
             sx={{ fontSize: 32, color: 'black', fontWeight: 'bold' }}
           >
-            Sign in
+            Sign Up
           </Typography>
         </Box>
-        <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={4}>
+        <Stack
+          component="form"
+          noValidate
+          onSubmit={handleSubmit(onSubmit)}
+          spacing={4}
+        >
           <Controller
             name="email"
             control={control}
@@ -115,6 +133,21 @@ const SignIn: NextPage = () => {
               />
             )}
           />
+          <Controller
+            name="name"
+            control={control}
+            rules={validationRules.name}
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                type="text"
+                label="ユーザー名"
+                error={fieldState.invalid}
+                helperText={fieldState.error?.message}
+                sx={{ backgroundColor: 'white' }}
+              />
+            )}
+          />
           <LoadingButton
             variant="contained"
             type="submit"
@@ -129,4 +162,4 @@ const SignIn: NextPage = () => {
   )
 }
 
-export default SignIn
+export default SignUp

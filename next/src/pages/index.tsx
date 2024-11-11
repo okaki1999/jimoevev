@@ -1,6 +1,7 @@
 import { Box } from '@mui/material'
 import type { NextPage } from 'next'
 import useSWR from 'swr'
+import { styles } from '@/styles'
 import { fetcher } from '@/utils'
 
 const Index: NextPage = () => {
@@ -11,7 +12,7 @@ const Index: NextPage = () => {
   if (!data) return <div>Loading...</div>
 
   return (
-    <Box sx={{ backgroundColor: '#e6f2ff', minHeight: '100vh' }}>
+    <Box css={styles.pageMinHeight} sx={{ backgroundColor: '#e6f2ff' }}>
       <div>Rails疎通確認</div>
       <div>レスポンスメッセージ: {data.message}</div>
     </Box>
