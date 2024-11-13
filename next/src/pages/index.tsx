@@ -1,6 +1,7 @@
 import { Box } from '@mui/material'
 import type { NextPage } from 'next'
 import useSWR from 'swr'
+import EventsList from '@/components/EventsList'
 import { styles } from '@/styles'
 import { fetcher } from '@/utils'
 
@@ -13,8 +14,7 @@ const Index: NextPage = () => {
 
   return (
     <Box css={styles.pageMinHeight} sx={{ backgroundColor: '#e6f2ff' }}>
-      <div>Rails疎通確認</div>
-      <div>レスポンスメッセージ: {data.message}</div>
+      <EventsList />
     </Box>
   )
 }
