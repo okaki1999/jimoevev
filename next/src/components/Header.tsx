@@ -35,6 +35,9 @@ const Header = () => {
   const handleAddNewClick = () => {
     router.push('/events/add_event')
   }
+  const handleUserEventsClick = () => {
+    router.push('/events/user_events')
+  }
   return (
     <AppBar
       position="static"
@@ -133,11 +136,11 @@ const Header = () => {
                       </Typography>
                     </Box>
                     <Divider />
-                    <MenuItem>
+                    <MenuItem onClick={handleUserEventsClick}>
                       <ListItemIcon>
                         <ArticleIcon fontSize="small" />
                       </ListItemIcon>
-                      記事の管理
+                      イベントの管理
                     </MenuItem>
                     <Link href="/sign_out">
                       <MenuItem>

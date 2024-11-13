@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       mount_devise_token_auth_for "User", at: "auth"
       resources :prefectures, only: [:index, :show]
       resources :events, only: [:index, :show, :create]
-
+      get ':id/events', to: 'events#user_index'
       namespace :current do
         resource :user, only: [:show]
       end
