@@ -1,4 +1,4 @@
-import { Box, Card, CardMedia, Typography } from '@mui/material'
+import { Box, Card, CardMedia, Grid, Typography } from '@mui/material'
 
 import React, { useEffect, useState } from 'react'
 import FetchImage from '@/components/FetchImage'
@@ -51,21 +51,26 @@ const EventsList: React.FC = () => {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
+        p: 5,
       }}
     >
       <Typography gutterBottom variant="h5" component="div">
         イベント一覧
       </Typography>
-      <ul>
+      <Grid container spacing={4} justifyContent="flex-start">
         {events.length > 0 ? (
           events.map((event) => (
-            <Card key={event.id} sx={{ maxWidth: 345, m: 4 }}>
-              <li key={event.id}>
+            <Grid item xs={12} sm={6} md={4} key={event.id}>
+              <Card
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                }}
+              >
                 {event.image_url && (
                   <CardMedia>
-                    {event.image_url && (
-                      <FetchImage avatarUrl={event.image_url} />
-                    )}
+                    <FetchImage avatarUrl={event.image_url} />
                   </CardMedia>
                 )}
                 <Typography gutterBottom variant="h5" component="div">
@@ -77,13 +82,13 @@ const EventsList: React.FC = () => {
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                   作成日: {new Date(event.created_at).toLocaleDateString()}
                 </Typography>
-              </li>
-            </Card>
+              </Card>
+            </Grid>
           ))
         ) : (
-          <p>イベントがありません</p>
+          <Typography>イベントがありません</Typography>
         )}
-      </ul>
+      </Grid>
     </Box>
   )
 }

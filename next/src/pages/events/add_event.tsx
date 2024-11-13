@@ -1,4 +1,11 @@
-import { Box, Button } from '@mui/material'
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -20,52 +27,109 @@ const AddEvent: React.FC = () => {
       formData.append('event[image]', image)
     }
 
+    // localStorageから各認証情報を取得
+    const accessToken = localStorage.getItem('access-token')
+    const client = localStorage.getItem('client')
+    const uid = localStorage.getItem('uid')
+
     try {
       await axios.post('http://localhost:3000/api/v1/events', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'access-token': accessToken || '', // access-tokenをヘッダーに追加
+          client: client || '', // clientをヘッダーに追加
+          uid: uid || '', // uidをヘッダーに追加
         },
       })
-      // イベントが作成されたらホームページにリダイレクト
       router.push('/')
     } catch (error) {
       console.error('Error creating event:', error)
-      // エラーハンドリング
     }
+  }
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null
+    setImage(file)
   }
 
   return (
     <Box css={styles.pageMinHeight} sx={{ backgroundColor: '#e6f2ff' }}>
-      <h1>新しいイベントを追加</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>タイトル</label>
-          <input
+      <Container maxWidth="sm">
+        <Typography textAlign="center" variant="subtitle1">
+          新しいイベントを追加
+        </Typography>
+        <Stack component="form" onSubmit={handleSubmit} spacing={4}>
+          <TextField
             type="text"
+            label="タイトル"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
+            sx={{ backgroundColor: 'white' }}
           />
-        </div>
-        <div>
-          <label>コンテンツ</label>
-          <textarea
+          <TextField
+            label="コンテンツ"
+            multiline
+            rows={4}
             value={content}
             onChange={(e) => setContent(e.target.value)}
             required
+            sx={{ backgroundColor: 'white' }}
           />
-        </div>
-        <div>
-          <label>画像</label>
-          <input
-            type="file"
-            onChange={(e) =>
-              setImage(e.target.files ? e.target.files[0] : null)
-            }
-          />
-        </div>
-        <Button type="submit">イベントを追加</Button>
-      </form>
+
+          {image && (
+            <Box textAlign="center">
+              <Box
+                component="img"
+                src={URL.createObjectURL(image)}
+                alt="選択された画像"
+                sx={{
+                  maxWidth: '100%',
+                  height: 'auto',
+                  mt: 1,
+                  borderRadius: 2,
+                }}
+              />
+            </Box>
+          )}
+
+          <Button
+            variant="contained"
+            component="label"
+            sx={{
+              backgroundColor: 'white',
+              color: 'black',
+              textTransform: 'none',
+              fontSize: 16,
+              borderRadius: 2,
+              boxShadow: 'none',
+              border: '1px solid #ccc',
+              '&:hover': {
+                backgroundColor: '#f0f0f0',
+                borderColor: '#999',
+                boxShadow: 'none',
+              },
+            }}
+          >
+            画像を選択
+            <input type="file" hidden onChange={handleImageChange} />
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{
+              color: 'white',
+              textTransform: 'none',
+              fontSize: 16,
+              borderRadius: 2,
+              boxShadow: 'none',
+            }}
+          >
+            イベントを追加
+          </Button>
+        </Stack>
+      </Container>
     </Box>
   )
 }

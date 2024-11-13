@@ -1,5 +1,6 @@
-class Api::V1::EventsController < ApplicationController
+class Api::V1::EventsController < Api::V1::BaseController
   include Rails.application.routes.url_helpers
+  before_action :authenticate_user!, only: [:create]
 
   def index
     @events = Event.all.map do |event|
@@ -9,7 +10,11 @@ class Api::V1::EventsController < ApplicationController
   end
 
   def create
+    return if current_user.blank?
+
+    @user_id = current_user.id
     @event = Event.new(event_params)
+    @event.user_id = current_user.id
     if @event.save
       render json: @event, status: :created
     else
