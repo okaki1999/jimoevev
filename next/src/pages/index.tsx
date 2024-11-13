@@ -1,6 +1,7 @@
 import { Box } from '@mui/material'
 import type { NextPage } from 'next'
 import useSWR from 'swr'
+// import EventCalendar from '@/components/EventCalendar'
 import EventsList from '@/components/EventsList'
 import { styles } from '@/styles'
 import { fetcher } from '@/utils'
@@ -14,6 +15,7 @@ const Index: NextPage = () => {
 
   return (
     <Box css={styles.pageMinHeight} sx={{ backgroundColor: '#e6f2ff' }}>
+      {/* <EventCalendar /> */}
       <EventsList />
     </Box>
   )

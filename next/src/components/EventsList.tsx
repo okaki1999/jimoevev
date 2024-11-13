@@ -18,7 +18,6 @@ const EventsList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  // データを取得する関数
   const fetchEvents = async () => {
     try {
       const response = await fetch('http://localhost:3000/api/v1/events')
@@ -38,7 +37,6 @@ const EventsList: React.FC = () => {
     }
   }
 
-  // コンポーネントのマウント時にデータを取得
   useEffect(() => {
     fetchEvents()
   }, [])

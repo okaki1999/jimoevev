@@ -16,6 +16,7 @@ import {
 } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useUserState } from '@/hooks/useGlobalState'
 
@@ -29,6 +30,10 @@ const Header = () => {
   }
   const handleClose = () => {
     setAnchorEl(null)
+  }
+  const router = useRouter()
+  const handleAddNewClick = () => {
+    router.push('/events/add_event')
   }
   return (
     <AppBar
@@ -110,6 +115,7 @@ const Header = () => {
                         width: 100,
                         boxShadow: 'none',
                       }}
+                      onClick={handleAddNewClick}
                     >
                       Add new
                     </Button>
