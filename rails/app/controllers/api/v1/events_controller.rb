@@ -28,10 +28,9 @@ class Api::V1::EventsController < ApplicationController
     render json: @event
   end
 
-
   private
 
-  def event_params
-    params.require(:event).permit(:title, :content, :image)
-  end
+    def event_params
+      params.require(:event).permit(:title, :content, :image)
+    end
 end
