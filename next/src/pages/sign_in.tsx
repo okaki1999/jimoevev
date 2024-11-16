@@ -46,6 +46,8 @@ const SignIn: NextPage = () => {
         localStorage.setItem('access-token', res.headers['access-token'])
         localStorage.setItem('client', res.headers['client'])
         localStorage.setItem('uid', res.headers['uid'])
+        const userId = res.data.data.id
+        localStorage.setItem('user_id', userId.toString())
         setUser({
           ...user,
           isFetched: false,

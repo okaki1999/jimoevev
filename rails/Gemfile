@@ -36,6 +36,8 @@ gem "devise-i18n"
 # ユーザーのトークン認証を提供する
 gem "devise_token_auth"
 
+gem "hashid-rails", "~> 1.0"
+
 group :development, :test do
   # テスト用データを作成する
   gem "factory_bot_rails"

@@ -115,12 +115,12 @@ const Header = () => {
                         textTransform: 'none',
                         fontSize: 16,
                         borderRadius: 2,
-                        width: 100,
+                        width: 150,
                         boxShadow: 'none',
                       }}
                       onClick={handleAddNewClick}
                     >
-                      Add new
+                      イベント追加
                     </Button>
                   </Box>
                   <Menu
